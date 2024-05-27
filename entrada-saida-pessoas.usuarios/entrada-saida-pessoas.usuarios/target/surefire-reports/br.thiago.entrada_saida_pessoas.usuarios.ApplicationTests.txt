@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: br.thiago.entrada_saida_pessoas.usuarios.ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.556 s -- in br.thiago.entrada_saida_pessoas.usuarios.ApplicationTests
