@@ -8,7 +8,7 @@ public class PageController {
 
     @GetMapping("/admin/crudUser")
     public String getAdminPage() {
-        return "GerenciamentoUsuario/crudUser.html"; // O Spring adicionará automaticamente o prefixo e sufixo definidos
+        return "GerenciamentoUsuario/crudUser"; // O Spring adicionará automaticamente o prefixo e sufixo definidos
     }
 
     @GetMapping("/user/entrada")
