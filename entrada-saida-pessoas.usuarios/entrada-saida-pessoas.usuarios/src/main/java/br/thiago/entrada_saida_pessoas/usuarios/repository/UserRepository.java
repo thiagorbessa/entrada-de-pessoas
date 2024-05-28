@@ -7,4 +7,5 @@ import br.thiago.entrada_saida_pessoas.usuarios.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-}
+	   User findByName(String name);
+	}
