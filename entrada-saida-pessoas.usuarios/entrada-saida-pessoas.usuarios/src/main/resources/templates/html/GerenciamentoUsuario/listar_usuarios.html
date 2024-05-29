@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Usuários</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    
+
+    <form id="buscaForm" action="#" method="get">
+        <h2>Listar Usuários</h2>
+        <label for="busca">Buscar por Nome ou Login:</label>
+        <input type="text" id="busca" name="busca" placeholder="Digite o nome ou login">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <div id="resultados">
+        <!-- Aqui serão exibidos os resultados da busca -->
+    </div>
+
+    <script>
+        document.getElementById("buscaForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+
+            var termoBusca = document.getElementById("busca").value;
+            buscarUsuarios(termoBusca);
+        });
+
+        function buscarUsuarios(termo) {
+            // Simulação de uma requisição AJAX para buscar os usuários no backend
+            // Aqui você deve implementar a lógica para buscar os usuários no servidor
+
+            // Exemplo de como exibir os resultados (substitua com a lógica real):
+            var resultados = document.getElementById("resultados");
+            resultados.innerHTML = ""; // Limpa os resultados anteriores
+
+            // Aqui você deve adicionar os resultados obtidos na resposta da requisição AJAX
+            // Exemplo:
+            var usuario1 = { nome: "Usuário 1", login: "usuario1" };
+            var usuario2 = { nome: "Usuário 2", login: "usuario2" };
+
+            // Exibindo os resultados na página
+            resultados.innerHTML += "<p>Nome: " + usuario1.nome + " - Login: " + usuario1.login + "</p>";
+            resultados.innerHTML += "<p>Nome: " + usuario2.nome + " - Login: " + usuario2.login + "</p>";
+        }
+    </script>
+</body>
+</html>

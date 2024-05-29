@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar entrada de pacientes</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        function fetchAddress() {
+            const cep = document.getElementById("cep").value;
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        alert("CEP não encontrado");
+                    } else {
+                        document.getElementById("street").value = data.logradouro;
+                        document.getElementById("city").value = data.localidade;
+                        document.getElementById("state").value = data.uf;
+                    }
+                });
+        }
+        function validateCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g,'');
+            if(cpf === '') return false;
+            // Elimina CPFs invalidos conhecidos
+            if (cpf.length !== 11 ||
+                cpf === "00000000000" ||
+                cpf === "11111111111" ||
+                cpf === "22222222222" ||
+                cpf === "33333333333" ||
+                cpf === "44444444444" ||
+                cpf === "55555555555" ||
+                cpf === "66666666666" ||
+                cpf === "77777777777" ||
+                cpf === "88888888888" ||
+                cpf === "99999999999") return false;
+            // Valida 1o digito
+            let add = 0;
+            for (let i=0; i < 9; i ++) add += parseInt(cpf.charAt(i)) * (10 - i);
+            let rev = 11 - (add % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            if (rev !== parseInt(cpf.charAt(9))) return false;
+            // Valida 2o digito
+            add = 0;
+            for (let i = 0; i < 10; i ++) add += parseInt(cpf.charAt(i)) * (11 - i);
+            rev = 11 - (add % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            if (rev !== parseInt(cpf.charAt(10))) return false;
+            return true;
+        }
+
+        window.onload = function() {
+            document.getElementById("entryForm").onsubmit = function() {
+                const cpfInput = document.getElementById("cpf");
+                if (!validateCPF(cpfInput.value)) {
+                    alert("CPF inválido!");
+                    cpfInput.focus();
+                    return false;
+                }
+            };
+        };
+        // Função para limpar formatação do CPF (mantendo apenas dígitos)
+        function cleanCPF(cpf) {
+            return cpf.replace(/[^\d]+/g,'');
+        }
+
+        // Função para formatar o CPF (adicionando pontos e traços)
+        function formatCPF(cpf) {
+            cpf = cleanCPF(cpf);
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        }
+        function prepareFormForSubmission() {
+            const cpfInput = document.getElementById("cpf");
+            cpfInput.value = cleanCPF(cpfInput.value); // Remove pontos e traços do CPF antes de enviar
+        }
+    </script>
+</head>
+<body>
+    <!-- Menu de navegação -->
+    <div class="navigation">
+        <h1>Cadastro de Entrada de Pessoa</h1>
+        <ul>
+            <li><a href="limpar" onclick="document.getElementById('entryForm').reset(); return false;">Limpar Campos</a></li>
+            <li><a href="saida" onclick="window.location.href='saida.html'; return false;">Saída de Pessoa</a></li>
+            <li><a href="deslogar" onclick="window.location.href='logout.html'; return false;">Deslogar</a></li>
+        </ul>
+    </div>
+
+    <!-- Formulário de entrada de pacientes -->
+    <form id="entryForm">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" required maxlength="14" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" oninput="this.value = formatCPF(this.value); autoCompleteName(this.value);">
+
+        <label for="birthDate">Data de Nascimento:</label>
+        <input type="date" id="birthDate" name="birthDate" required>
+
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" name="cep" required>
+        <button type="button" onclick="fetchAddress()">Buscar Endereço</button>
+
+        <label for="street">Rua:</label>
+        <input type="text" id="street" name="street" readonly>
+
+        <label for="city">Cidade:</label>
+        <input type="text" id="city" name="city" readonly>
+
+        <label for="state">Estado:</label>
+        <input type="text" id="state" name="state" readonly>
+
+        <label for="houseNumber">Número da Casa:</label>
+        <input type="text" id="houseNumber" name="houseNumber" required>
+
+        <label for="complement">Complemento:</label>
+        <input type="text" id="complement" name="complement">
+
+        <label for="contactPhone">Telefone de Contato:</label>
+        <input type="text" id="contactPhone" name="contactPhone" required>
+
+        <label for="sector">Setor:</label>
+        <input type="text" id="sector" name="sector" required>
+
+        <label for="floor">Andar:</label>
+        <input type="text" id="floor" name="floor" required>
+
+        <label for="isVisitor">Visita:</label>
+        <input type="checkbox" id="isVisitor" name="isVisitor">
+
+        <div id="visitorDetails" style="display:none;">
+            <label for="patientName">Nome do Paciente:</label>
+            <input type="text" id="patientName" name="patientName">
+
+            <label for="patientBed">Leito:</label>
+            <input type="text" id="patientBed" name="patientBed">
+        </div>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById("isVisitor").addEventListener("change", function() {
+            const visitorDetails = document.getElementById("visitorDetails");
+            if (this.checked) {
+                visitorDetails.style.display = "block";
+            } else {
+                visitorDetails.style.display = "none";
+            }
+        });
+
+        function clearFormFields() {
+            document.getElementById("entryForm").reset();
+        }
+    </script>
+</body>
+</html>
